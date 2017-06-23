@@ -13,7 +13,7 @@ class ResumesTableSeeder extends Seeder
     public function run()
     {
         $user = User::first();
-        
+
         DB::table('Resumes')->insert([
             'user_id' => $user->id,
             'name' => $user->username,
@@ -23,6 +23,7 @@ class ResumesTableSeeder extends Seeder
             'mobile' => $user->mobile,
             'email' => str_random(10) . '@gmail.com',
             'value' => rand(4100, 9600),
+            'is_open' => 1,
         ]);
     }
 }

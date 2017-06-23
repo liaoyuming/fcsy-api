@@ -13,9 +13,10 @@ class CreateQuestionnairesTable extends Migration
      */
     public function up()
     {
-        Schema::create('qestionnaires', function (Blueprint $table) {
+        Schema::create('questionnaires', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('display_name');
         });
     }
 
@@ -26,6 +27,6 @@ class CreateQuestionnairesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('qestionnaires');
+        Schema::dropIfExists('questionnaires');
     }
 }

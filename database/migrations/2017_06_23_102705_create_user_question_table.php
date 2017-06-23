@@ -4,27 +4,23 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateResumesTable extends Migration
+class CreateUserQuestionTable extends Migration
 {
     /**
      * Run the migrations.
-     *s
+     *
      * @return void
      */
     public function up()
     {
-        Schema::create('resumes', function(Blueprint $table) {
+        Schema::create('user_question', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('name');
-            $table->tinyInteger('sex');
-            $table->string('position');
-            $table->string('city');
-            $table->string('mobile');
-            $table->string('email');
-            $table->string('value');
-            $table->tinyInteger('is_open');
+            $table->integer('question_id')->unsigned();
+            $table->integer('character_type_id')->unsigned();
+            $table->foreign('question_id')->references('id')->on('questions');
+            $table->foreign('character_type_id')->references('id')->on('character_types');
         });
     }
 
@@ -35,6 +31,6 @@ class CreateResumesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('resumes');
+        Schema::dropIfExists('user_question');
     }
 }
