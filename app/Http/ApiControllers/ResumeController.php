@@ -3,6 +3,7 @@
 namespace App\Http\ApiControllers;
 
 use App\Http\ApiControllers\ApiController;
+use App\Transformers\ResumeTransformer;
 use App\Models\Resume;
 
 
@@ -19,7 +20,8 @@ class ResumeController extends ApiController
 
     public function index()
     {
-        return Resume::all();
+        $resume = Resume::all();
+        return $this->response->collection($resume, new ResumeTransformer());
     }
 
 }
