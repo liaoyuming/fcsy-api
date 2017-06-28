@@ -14,7 +14,7 @@ class ResumesTableSeeder extends Seeder
     {
         $user = User::first();
 
-        DB::table('Resumes')->insert([
+        DB::table('resumes')->insert([
             'user_id' => $user->id,
             'name' => $user->username,
             'sex' => rand(0, 1),
