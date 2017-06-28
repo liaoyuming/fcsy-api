@@ -21,7 +21,7 @@ class UserController extends ApiController
     public function index()
     {
         $user = User::all();
-        return $this->collection($user, new UserTransformer());
+        return $this->response->collection($user, new UserTransformer());
     }
 
     public function show()
