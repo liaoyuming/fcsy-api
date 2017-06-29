@@ -2,7 +2,7 @@
 
 $api = app('Dingo\Api\Routing\Router');
 
-$api->version(env('API_VERSION'), function ($api) {
+$api->version('v1', function ($api) {
     $api->group(['namespace' => 'App\Http\ApiControllers'], function ($api) {
 
         $api->get('user', 'UserController@index');
