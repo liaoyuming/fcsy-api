@@ -14,6 +14,8 @@ $api->version(env('API_VERSION'), function ($api) {
         $api->post('getSmsCode', 'SmsController@getSmsCode');
         // 注册路由
         $api->post('register', 'RegisterController@register');
+        // 登录路由
+        $api->post('register', 'LoginController@Authentic');
         $api->group(['prefix' => 'questionnaire'], function ($api) {
                 $api->get('/', 'QuestionnaireController@index');
                 $api->get('/show', 'QuestionnaireController@show');
