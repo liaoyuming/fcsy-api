@@ -84,7 +84,6 @@ class SmsController extends ApiController
      */
     private function setCodeCache($telphone, $code)
     {
-
         $expiresAt = Carbon::now()->addMinutes(10);
         Cache::put($telphone, $code, $expiresAt);
     }

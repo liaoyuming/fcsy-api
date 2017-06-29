@@ -17,12 +17,13 @@ class CreateWechatUserTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('open_id')->comment('微信open_id');
             $table->string('gender')->comment('性别');
             $table->string('city')->comment('city');
             $table->string('province')->comment('province');
             $table->string('country')->comment('country');
             $table->string('avatar_url')->comment('avatar_url');
+            $table->string('nickname')->comment('昵称');
+            $table->string('open_id')->comment('微信open_id');
             $table->timestamps();
         });
     }
