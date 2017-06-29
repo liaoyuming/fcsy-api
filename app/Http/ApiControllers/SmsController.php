@@ -51,7 +51,7 @@ class SmsController extends ApiController
          $result = $easySms->send(
              $telphone,
              [
-                 'content'  => '【费才生涯】您的验证码是: ' . $code,
+                 'content'  => '【费才生涯】您的验证码是#code#',
                  'template' => 'SMS_001',
                  'data' => [
                      'code' => $code
