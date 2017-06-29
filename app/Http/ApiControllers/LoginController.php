@@ -14,9 +14,13 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController
 {
-    public function Authentic(Request $request)
+    public function authenticate(Request $request)
     {
-        if (Auth::attempt(['mobile' => $request->get('telphone'), 'password' => $request->get('password')])) {
+        $authData = [
+                'mobile'   => $request->get('telphone'),
+                'password' => $request->get('password')
+        ];
+        if (Auth::attempt($authData)) {
             return response()->json(
                 [
                     'result' => Auth::user(),
@@ -29,7 +33,6 @@ class LoginController
                 'result' => false,
                 'msg'    => '登录失败'
             ]
-            , 403
-        );
+            , 403);
     }
 }
