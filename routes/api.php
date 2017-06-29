@@ -12,7 +12,8 @@ $api->version(env('API_VERSION'), function ($api) {
         $api->post('changeResumeStatus', 'ResumeController@changeResumeStatus');
         // 短信路由
         $api->post('getSmsCode', 'SmsController@getSmsCode');
-
+        // 注册路由
+        $api->post('register', 'RegisterController@register');
         $api->group(['prefix' => 'questionnaire'], function ($api) {
                 $api->get('/', 'QuestionnaireController@index');
                 $api->get('/show', 'QuestionnaireController@show');
