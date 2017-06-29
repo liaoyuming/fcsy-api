@@ -25,6 +25,7 @@ class CreateResumesTable extends Migration
             $table->string('email');
             $table->string('value');
             $table->tinyInteger('is_open');
+            $table->timestamps();
         });
     }
 

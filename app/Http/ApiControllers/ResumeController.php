@@ -6,6 +6,7 @@ use App\Http\ApiControllers\ApiController;
 use App\Transformers\ResumeTransformer;
 use App\Models\Resume;
 use App\Http\Requests\Request;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
 class ResumeController extends ApiController
 {
@@ -22,12 +23,15 @@ class ResumeController extends ApiController
      * @param int $status
      * @param int $id userId
      *
-     * @return array | bool
+     * @return \Dingo\Api\Http\Response;
      */
-    public function changeResumeStatus($status, $id)
+    public function changeResumeStatus($id, $status)
     {
         $result = Resume::where('user_id', $id)->update(['is_open' => $status]);
-        dd($result);
+        return response()->json([
+                'result' => $result,
+                'msg'    => '更新简历状态成功'
+            ], 200);
     }
 
 
