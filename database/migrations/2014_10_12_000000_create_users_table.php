@@ -18,9 +18,6 @@ class CreateUsersTable extends Migration
             $table->string('username');
             $table->string('mobile');
             $table->string('password');
-            // $table->string('appId');
-            // $table->string('openid', 64);
-            // $table->text('user_info');
             $table->tinyInteger('is_member')->default(0);
             $table->dateTime('member_expire_time');
             $table->rememberToken();

@@ -31,8 +31,7 @@ class ResumeController extends ApiController
         return response()->json([
                 'result' => $result,
                 'msg'    => '更新简历状态成功'
-            ], 200);
+        ], 200);
     }
-
 
 }

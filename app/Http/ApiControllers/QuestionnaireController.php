@@ -25,5 +25,4 @@ class QuestionnaireController extends ApiController
         }
         return $this->response->item($questionnaire, new QuestionnaireTransformer());
     }
-
 }
