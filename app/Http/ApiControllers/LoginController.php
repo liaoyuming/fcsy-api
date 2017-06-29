@@ -24,5 +24,12 @@ class LoginController
                 ]
             , 200);
         }
+        return response()->json(
+            [
+                'result' => false,
+                'msg'    => '登录失败'
+            ]
+            , 403);
+
     }
 }
