@@ -12,6 +12,7 @@ use App\Http\Requests\Request;
 use Overtrue\EasySms\EasySms;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
+use Config;
 
 class SmsController extends ApiController
 {
@@ -43,30 +44,7 @@ class SmsController extends ApiController
      */
      private function sendSms($telphone)
      {
-         $config = [
-             // HTTP 请求的超时时间（秒）
-             'timeout' => 5.0,
-
-             // 默认发送配置
-             'default' => [
-                 // 网关调用策略，默认：顺序调用
-                 'strategy' => \Overtrue\EasySms\Strategies\OrderStrategy::class,
-
-                 // 默认可用的发送网关
-                 'gateways' => [
-                     'yunpian'
-                 ],
-             ],
-             // 可用的网关配置
-             'gateways' => [
-                 'errorlog' => [
-                     'file' => '/tmp/easy-sms.log',
-                 ],
-                 'yunpian' => [
-                     'api_key' => Config::get('yunpian.api_key'),
-                 ]
-             ],
-         ];
+         $config = Config::get('sms.yunpian');
          $easySms = new EasySms($config);
          $code = $this->generateSmsCode($telphone);
 
@@ -80,7 +58,6 @@ class SmsController extends ApiController
                  ],
              ]
          );
-
          return $result;
      }
 
