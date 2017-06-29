@@ -52,7 +52,6 @@ class SmsController extends ApiController
              $telphone,
              [
                  'content'  => '【费才生涯】您的验证码是#code#',
-                 'template' => 'SMS_001',
                  'data' => [
                      'code' => $code
                  ],
