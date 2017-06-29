@@ -15,7 +15,7 @@ class ApiController extends BaseController
 
     protected $wxxcx;
 
-    function __construct(Wxxcx $wxxcx)
+    public function __construct(Wxxcx $wxxcx)
     {
         $this->wxxcx = $wxxcx;
     }
