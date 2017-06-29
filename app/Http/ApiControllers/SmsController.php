@@ -63,7 +63,7 @@ class SmsController extends ApiController
                      'file' => '/tmp/easy-sms.log',
                  ],
                  'yunpian' => [
-                     'api_key' => 'b1524ac3f4d3555f9918c0d8013309d2',
+                     'api_key' => Config::get('yunpian.api_key'),
                  ]
              ],
          ];
