@@ -1,19 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: laputa
- * Date: 29/06/2017
- * Time: 6:32 PM
- */
 
 namespace App\Http\ApiControllers;
 
 use App\Http\Requests\Request;
 use App\Models\User;
 use App\Models\WechatUser;
-use App\Http\ApiControllers\SmsController;
 
-class RegisterController extends ApiController
+class RegisterController
 {
     public function register(Request $request) {
 
