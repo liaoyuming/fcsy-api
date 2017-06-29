@@ -9,15 +9,6 @@ use App\Http\Requests\Api\QuestionnaireRequest;
 
 class QuestionnaireController extends ApiController
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-
-    }
 
     public function index()
     {
