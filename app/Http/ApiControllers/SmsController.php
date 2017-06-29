@@ -51,12 +51,14 @@ class SmsController extends ApiController
          $result = $easySms->send(
              $telphone,
              [
-                 'content'  => '【费才生涯】您的验证码是#code#',
+                 'content'  => '您的验证码是' . $code,
+                 'template' => 'SMS_001',
                  'data' => [
                      'code' => $code
                  ],
              ]
          );
+
          return $result;
      }
 
@@ -83,6 +85,7 @@ class SmsController extends ApiController
      */
     private function setCodeCache($telphone, $code)
     {
+
         $expiresAt = Carbon::now()->addMinutes(10);
         Cache::put($telphone, $code, $expiresAt);
     }
