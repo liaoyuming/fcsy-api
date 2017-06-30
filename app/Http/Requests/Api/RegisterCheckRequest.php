@@ -7,7 +7,7 @@ class RegisterCheckRequest extends ApiRequest
     protected function getRestrictions()
     {
         return [
-            'app_id' => [
+            'open_id' => [
                 'required' => true,
             ],
         ];
