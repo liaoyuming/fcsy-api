@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CharacterTypesTableSeeder::class);
         $this->call(QuestionsTableSeeder::class);
         $this->call(QuestionOptionsTableSeeder::class);
+        $this->call(WechatUsersTableSeeder::class);
     }
 }
