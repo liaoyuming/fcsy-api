@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class WechatUser extends Model
 {
-    protected $table = 'wechat_user';
     protected $fillable = [
-        'openId',
-        'nickName',
+        'open_id',
+        'nickname',
         'gender',
         'city',
         'province',
         'country',
-        'avatarUrl'
+        'avatar_url'
     ];
 }

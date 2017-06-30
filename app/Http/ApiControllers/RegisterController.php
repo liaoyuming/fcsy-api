@@ -2,13 +2,15 @@
 
 namespace App\Http\ApiControllers;
 
-use App\Http\Requests\Request;
 use App\Models\User;
 use App\Models\WechatUser;
+use App\Http\Requests\Request;
+use App\Http\Requests\APi\RegisterCheckRequest;
 
 class RegisterController
 {
-    public function register(Request $request) {
+    public function index(Request $request)
+    {
 
         if (! (new SmsController())->verifySmsCode($request->get('telphone'), $request->get('code'))) {
             return response()->json([
@@ -27,13 +29,13 @@ class RegisterController
 
         $wechatData = [
             'user_id' => $user->id,
-            'openId'  => $request->get('openId'),
-            'nickName'  => $request->get('nickName'),
+            'open_id'  => $request->get('openId'),
+            'nickname'  => $request->get('nickName'),
             'gender'  => $request->get('gender'),
             'city'  => $request->get('city'),
             'province'  => $request->get('province'),
             'country'  => $request->get('country'),
-            'avatarUrl'  => $request->get('avatarUrl'),
+            'avatar_url'  => $request->get('avatarUrl'),
         ];
 
         $result = WechatUser::create($wechatData);
@@ -49,5 +51,15 @@ class RegisterController
             'result' => $result,
             'msg'    => '注册用户失败'
         ], 402);
+    }
+
+    public function check(RegisterCheckRequest $request)
+    {
+        $wechat_user = WechatUser::where('open_id', $request->input('open_id'))->first();
+
+        return response()->json([
+            'result' => !!$wechat_user->user,
+            'msg'    => '用户已注册'
+        ], 200);
     }
 }

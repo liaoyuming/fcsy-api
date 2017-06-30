@@ -16,9 +16,15 @@ $api->version('v1', function ($api) {
         $api->post('register', 'RegisterController@register');
         // 登录路由
         $api->post('login', 'LoginController@authenticate');
+
         $api->group(['prefix' => 'questionnaire'], function ($api) {
                 $api->get('/', 'QuestionnaireController@index');
                 $api->get('/show', 'QuestionnaireController@show');
+        });
+
+        $api->group(['prefix' => 'register'], function ($api) {
+                $api->post('/', 'RegisterController@index');
+                $api->post('/check', 'RegisterController@check');
         });
     });
 });
