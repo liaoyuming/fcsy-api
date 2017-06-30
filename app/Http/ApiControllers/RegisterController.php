@@ -18,6 +18,7 @@ class RegisterController
         }
 
         $userData = $request->only([
+            'username' => $request->get('nickName'),
             'mobile'   => $request->get('telphone'),
             'password' => bcrypt($request->get('password'))
         ]);
