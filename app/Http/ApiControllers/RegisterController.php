@@ -5,16 +5,32 @@ namespace App\Http\ApiControllers;
 use App\Http\Requests\Request;
 use App\Models\User;
 use App\Models\WechatUser;
+use Validator;
 
-class RegisterController
+class RegisterController extends ApiController
 {
     public function register(Request $request) {
+        $validate = Validator::make($request->all(), [
+            'openId'     => 'required',
+            'telphone'   => 'required',
+            'code'       => 'required',
+            'password'   => 'required | min:6',
+            'nickName'   => 'required',
+            'gender'     => 'required',
+            'avatarUrl'  => 'required',
+        ]);
+        if ($validate->fails()) {
+            return response()->json([
+                    'result' => $validate->errors(),
+                    'msg'    => 'forms validated errors'
+                ], 400);
+        }
 
         if (! (new SmsController())->verifySmsCode($request->get('telphone'), $request->get('code'))) {
             return response()->json([
                 'result' => false,
                 'msg'    => '短信验证码不正确'
-            ], 403);
+            ], 400);
         }
 
         $userData = $request->only([

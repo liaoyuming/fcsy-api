@@ -32,7 +32,7 @@ class SmsController extends ApiController
                 'msg'    => '电话不能为空'
             ], 401);
         }
-        return $this->response()->json($this->sendSms($telphone), 200);
+        return response()->json($this->sendSms($telphone), 200);
     }
 
     /**
@@ -85,7 +85,6 @@ class SmsController extends ApiController
      */
     private function setCodeCache($telphone, $code)
     {
-
         $expiresAt = Carbon::now()->addMinutes(10);
         Cache::put($telphone, $code, $expiresAt);
     }
@@ -113,13 +112,12 @@ class SmsController extends ApiController
      */
     public function verifySmsCode($telphone, $code)
     {
-       $value = Cache::get($telphone);
-
-       if ($value == $code) {
+        $value = Cache::get($telphone);
+        if ($value == $code) {
            // 移除code缓存
            $this->removeCodeCache($telphone);
            return true;
-       }
+        }
        return false;
     }
 }
