@@ -56,10 +56,12 @@ class RegisterController
     public function check(RegisterCheckRequest $request)
     {
         $wechat_user = WechatUser::where('open_id', $request->input('open_id'))->first();
+        
+        $result = $wechat_user ? !!$wechat_user->user : false;
 
         return response()->json([
-            'result' => !!$wechat_user->user,
-            'msg'    => '用户已注册'
+            'result' => $result,
+            'msg'    => $result ? '用户已注册' : '用户未注册',
         ], 200);
     }
 }

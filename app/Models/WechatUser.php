@@ -15,4 +15,10 @@ class WechatUser extends Model
         'country',
         'avatar_url'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+
+    }
 }
