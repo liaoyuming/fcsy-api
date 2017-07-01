@@ -5,7 +5,7 @@ namespace App\Http\ApiControllers;
 use App\Models\User;
 use App\Models\WechatUser;
 use App\Http\Requests\Request;
-use App\Http\Requests\APi\RegisterCheckRequest;
+use App\Http\Requests\Api\RegisterCheckRequest;
 
 use Validator;
 
