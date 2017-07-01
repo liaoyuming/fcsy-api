@@ -4,12 +4,10 @@ namespace App\Http\Requests\Api;
 
 class RegisterCheckRequest extends ApiRequest
 {
-    protected function getRestrictions()
+    public function rules()
     {
         return [
-            'open_id' => [
-                'required' => true,
-            ],
+            'open_id'     => 'required',
         ];
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use App\Exceptions\Api\Helper\ErrorType;
 use App\Exceptions\Api\ApiErrorException;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Dingo\Api\Exception\ValidationHttpException;
 
 class Request extends FormRequest
 {
@@ -21,14 +23,6 @@ class Request extends FormRequest
     {
         return [];
     }
-
-
-    protected function getRestrictions()
-    {
-        return [];
-    }
-
-
 
     /**
      * Determine if the user is authorized to make this request.
@@ -97,5 +91,14 @@ class Request extends FormRequest
                 return $item;
             }
         }, $data);
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        if ($this->container['request'] instanceof Request) {
+            throw new ValidationHttpException($validator->errors());
+        }
+
+        parent::failedValidation($validator);
     }
 }
