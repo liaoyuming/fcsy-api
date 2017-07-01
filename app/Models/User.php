@@ -6,11 +6,13 @@ use App\Models\BaseModel;
 
 class User extends BaseModel
 {
+	protected $table = 'users';
 
 	protected $fillable = [
 		'username',
 		'mobile',
-		'password'
+		'password',
+		'member_expire_time'
 	];
 
 	/**
@@ -28,4 +30,5 @@ class User extends BaseModel
 	{
 		return $this->belongsToMany(Question::class, 'user_question');
 	}
+
 }

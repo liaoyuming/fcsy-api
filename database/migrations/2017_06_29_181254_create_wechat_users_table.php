@@ -23,7 +23,7 @@ class CreateWechatUsersTable extends Migration
             $table->string('country')->comment('country');
             $table->string('avatar_url')->comment('avatar_url');
             $table->string('nickname')->comment('昵称');
-            $table->integer('open_id')->unique()->comment('微信open_id');
+            $table->string('open_id')->unique()->comment('微信open_id');
             $table->timestamps();
         });
     }
