@@ -41,15 +41,18 @@ class LoginController
     {
         $code = $request->get('code');
         if (empty($code)) {
-            return response()->json(
-                [
+            return response()->json([
                     'result' => false,
-                    'msg'    => '登录失败'
-                ]
-            , 403);
+                    'msg'    => '微信登录失败',
+                ], 403);
         }
-        $xcx = App::make("wxxcx");
+        $xcx = app()->make("wxxcx");
         $loginInfo = $xcx->getLoginInfo($code);
-        dd($loginInfo);
+
+        return response()->json([
+            'result' => true,
+            'msg'    => '微信登录成功',
+            'data'   => $loginInfo,
+        ]);
     }
 }
