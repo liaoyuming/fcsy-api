@@ -22,43 +22,47 @@ class RegisterController extends ApiController
             ], 400);
         }
 
-        $userData = $request->only([
+        $userData = [
             'username' => $request->get('nickName'),
+            'member_expire_time' => date('Y-m-d h:i:s', strtotime('+1 week')),
             'mobile'   => $request->get('telphone'),
             'password' => bcrypt($request->get('password'))
-        ]);
+        ];
 
         $user = User::create($userData);
 
-        $wechatData = [
-            'user_id' => $user->id,
-            'open_id'  => $request->get('openId'),
-            'nickname'  => $request->get('nickName'),
-            'gender'  => $request->get('gender'),
-            'city'  => $request->get('city'),
-            'province'  => $request->get('province'),
-            'country'  => $request->get('country'),
-            'avatar_url'  => $request->get('avatarUrl'),
-        ];
+        if ($user->id > 0) {
+            $wechatData = [
+                'user_id' => $user->id,
+                'open_id'  => $request->get('openId'),
+                'nickname'  => $request->get('nickName'),
+                'gender'  => $request->get('gender'),
+                'city'  => $request->get('city'),
+                'province'  => $request->get('province'),
+                'country'  => $request->get('country'),
+                'avatar_url'  => $request->get('avatarUrl'),
+            ];
+        }
 
         $result = WechatUser::create($wechatData);
 
         if ($result->id > 0) {
             return response()->json([
                 'result' => $result,
-                'msg'    => '注册用户成功'
+                'msg'    => '注册用户成功',
+                'status_code' => 200
             ], 200);
         }
 
         return response()->json([
             'result' => $result,
+            'status_code' => 402,
             'msg'    => '注册用户失败'
         ], 402);
     }
 
     public function check(RegisterCheckRequest $request)
     {
-        dd(123);
         $wechat_user = WechatUser::where('open_id', $request->input('open_id'))->first();
 
         $result = $wechat_user ? !!$wechat_user->user : false;

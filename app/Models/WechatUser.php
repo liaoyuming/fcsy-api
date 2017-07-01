@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class WechatUser extends Model
 {
     protected $fillable = [
+        'user_id',
         'open_id',
         'nickname',
         'gender',
