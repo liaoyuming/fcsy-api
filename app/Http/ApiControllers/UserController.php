@@ -41,11 +41,11 @@ class UserController extends ApiController
 	public function update(Request $request)
 	{
 		$string = strval($request->getContent());
-		$result = json_decode($string);
-		$userId = $result->user_id;
+		$result = json_decode($string, true);
+		$userId = $result['user_id'];
 
-		$key = $result->key;
-		$data = $result->data;
+		$key = $result['key'];
+		$data = $result['data'];
 		$user = User::find($userId);
 		$resume = $user->resume;
 		$resume->{$key} = $data;
@@ -62,11 +62,15 @@ class UserController extends ApiController
 	public function answer(Request $request)
 	{
 		$string = strval($request->getContent());
-		$result = json_decode($string);
-		$userId = $result->user_id;
+		$result = json_decode($string, true);
+		$userId = $result['user_id'];
 		$user = User::find($userId);
-		$data = $result->answer;
-		return $this->syncData($user, $data);
+		$data = $result['answer'];
+		$this->syncData($user, $data);
+        return response()->json([
+            'result' => true,
+            'msg' => 'success'
+        ], 200);
 	}
 
 	/**
