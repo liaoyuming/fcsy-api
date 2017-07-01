@@ -4,7 +4,8 @@ namespace App\Http\ApiControllers;
 
 use App\Http\ApiControllers\ApiController;
 use App\Http\Requests\Request;
-use App\Models\CharacterSalaries;
+use App\Models\CharacterSalary;
+use App\Models\CharacterType;
 use App\Models\QuestionOption;
 use App\Models\Resume;
 use App\Models\User;
@@ -40,6 +41,7 @@ class UserController extends ApiController
 	public function statistics(Request $request)
 	{
 		$userId = $request->get('user_id');
+//		$userId = 1;
 		$user = User::find($userId);
 		$data = $request->get('questionnaire');
 		/*
@@ -65,6 +67,7 @@ class UserController extends ApiController
 		}
 		*/
 
+
 		// 回答存数据库
 		$this->syncData($user, $data);
 
@@ -87,19 +90,25 @@ class UserController extends ApiController
 
 
 		// 排名前三人格
-		$maxThree = $this->maxThree($result);
+		$maxThree = $this->max($result, 3);
 
+		$max = $this->max($maxThree, 1);
+
+		$character_id = array_keys($max)[0] + 1;
+
+		$character = CharacterType::find($character_id);
+		
 		$salary = 0;
 
 		// 前三人格薪资取平均
 		foreach ($maxThree as $character_id => $score) {
-			$salaryMap = CharacterSalaries::where('character_id', $character_id + 1)->first();
+			$salaryMap = CharacterSalary::where('character_id', $character_id + 1)->first();
 			$salary += (($salaryMap->min_salary + $salaryMap->max_salary) / 2);
 		}
 		$salary /= 3;
 
 		$resume = $this->updateResume($user, $salary);
-		return response()->json($resume->toArray());
+		return response()->json(array_merge($resume->toArray(), ['character' => $character->display_name]));
 
 	}
 
@@ -107,10 +116,10 @@ class UserController extends ApiController
 	 * @param $array
 	 * @return array
 	 */
-	protected function maxThree($array)
+	protected function max($array, $limit)
 	{
 		arsort($array);
-		$array = array_slice($array, 0, 3, true);
+		$array = array_slice($array, 0, $limit, true);
 		return $array;
 	}
 
