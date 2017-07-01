@@ -61,14 +61,11 @@ class UserController extends ApiController
 	 */
 	public function answer(Request $request)
 	{
-		//		$userId = $request->get('user_id');
-		//		$user = User::find($userId);
-		//		$data = $request->get('questionnaire');
 		$string = strval($request->getContent());
 		$result = json_decode($string);
 		$userId = $result->user_id;
 		$user = User::find($userId);
-		$data = $result->questionnaire;
+		$data = $result->answer;
 		return $this->syncData($user, $data);
 	}
 
