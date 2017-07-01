@@ -17,7 +17,7 @@ $api->version('v1', function ($api) {
         // 登录路由
         $api->post('login', 'LoginController@authenticate');
         // 微信登录路由
-        $api->any('wechat', 'LoginController@wechat');
+        $api->post('wechat', 'LoginController@wechat');
 
         $api->group(['prefix' => 'questionnaire'], function ($api) {
                 $api->get('/', 'QuestionnaireController@index');
