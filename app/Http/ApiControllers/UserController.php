@@ -107,9 +107,9 @@ class UserController extends ApiController
 
 		$maxTwo = $this->max($maxThree, 2);
 
-		$describe = $this->getDescribe($maxTwo);
+		$description = $this->getDescription($maxTwo);
 
-		return response()->json(array_merge($resume->toArray(), ['describe' => $describe]));
+		return response()->json(array_merge($resume->toArray(), ['description' => $description]));
 
 	}
 
@@ -152,9 +152,9 @@ class UserController extends ApiController
 		return $resume;
 	}
 
-	public function getDescribe($maxTwo)
+	public function getDescription($maxTwo)
 	{
-		$describe = '';
+		$description = '';
 
 
 		$character_id = array_keys($maxTwo)[0] + 1;
@@ -164,9 +164,9 @@ class UserController extends ApiController
 		$character = CharacterType::find($character_id);
 
 		//		dd($character->display_name);
-		$describe .= (str_replace('型', '', $character->display_name));
+		$description .= (str_replace('型', '', $character->display_name));
 
-		$describe .= '的';
+		$description .= '的';
 
 		$character_id = array_keys($maxTwo)[1] + 1;
 
@@ -174,11 +174,11 @@ class UserController extends ApiController
 
 		$character = CharacterType::find($character_id);
 
-		$describe .= $character->display_name;
+		$description .= $character->display_name;
 
-		$describe .= '人才';
+		$description .= '人才';
 
-		return $describe;
+		return $description;
 	}
 
 }
