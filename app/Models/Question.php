@@ -15,4 +15,12 @@ class Question extends BaseModel
     {
         return $this->hasMany('App\Models\QuestionOption');
     }
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
+	public function users()
+	{
+		return $this->belongsToMany(User::class, 'user_question');
+	}
 }
