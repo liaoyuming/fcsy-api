@@ -32,7 +32,7 @@ class RegisterController extends ApiController
 
         $wechatData = [
             'user_id' => $user->id,
-            'open_id'  => $request->get('open_id'),
+            'open_id'  => $request->get('openId'),
             'nickname'  => $request->get('nickName'),
             'gender'  => $request->get('gender'),
             'city'  => $request->get('city'),
