@@ -39,9 +39,11 @@ class UserController extends ApiController
 	 */
 	public function statistics(Request $request)
 	{
-		$userId = 1;
+		$userId = $request->get('user_id');
 		$user = User::find($userId);
+		$data = $request->get('questionnaire');
 		/*
+		数据形式，供参考
 		$data = [
 			[
 				'question_id' => 1,
@@ -53,6 +55,7 @@ class UserController extends ApiController
 			]
 		];
 		*/
+		/*
 		$data = [];
 		for ($i = 1; $i <= 36; $i ++) {
 			array_push($data, [
@@ -60,6 +63,7 @@ class UserController extends ApiController
 				'question_option_id' => rand(1, 2)
 			]);
 		}
+		*/
 
 		// 回答存数据库
 		$this->syncData($user, $data);
