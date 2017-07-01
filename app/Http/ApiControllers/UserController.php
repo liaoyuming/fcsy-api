@@ -41,7 +41,7 @@ class UserController extends ApiController
 	public function statistics(Request $request)
 	{
 		$userId = $request->get('user_id');
-//		$userId = 1;
+		//		$userId = 1;
 		$user = User::find($userId);
 		$data = $request->get('questionnaire');
 		/*
@@ -57,6 +57,7 @@ class UserController extends ApiController
 			]
 		];
 		*/
+
 		/*
 		$data = [];
 		for ($i = 1; $i <= 36; $i ++) {
@@ -92,12 +93,7 @@ class UserController extends ApiController
 		// 排名前三人格
 		$maxThree = $this->max($result, 3);
 
-		$max = $this->max($maxThree, 1);
 
-		$character_id = array_keys($max)[0] + 1;
-
-		$character = CharacterType::find($character_id);
-		
 		$salary = 0;
 
 		// 前三人格薪资取平均
@@ -108,7 +104,12 @@ class UserController extends ApiController
 		$salary /= 3;
 
 		$resume = $this->updateResume($user, $salary);
-		return response()->json(array_merge($resume->toArray(), ['character' => $character->display_name]));
+
+		$maxTwo = $this->max($maxThree, 2);
+
+		$describe = $this->getDescribe($maxTwo);
+
+		return response()->json(array_merge($resume->toArray(), ['describe' => $describe]));
 
 	}
 
@@ -149,6 +150,35 @@ class UserController extends ApiController
 		$resume->value = intval($salary);
 		$resume->save();
 		return $resume;
+	}
+
+	public function getDescribe($maxTwo)
+	{
+		$describe = '';
+
+
+		$character_id = array_keys($maxTwo)[0] + 1;
+
+		//		dd($character_id);
+
+		$character = CharacterType::find($character_id);
+
+		//		dd($character->display_name);
+		$describe .= (str_replace('型', '', $character->display_name));
+
+		$describe .= '的';
+
+		$character_id = array_keys($maxTwo)[1] + 1;
+
+		//		dd($character_id);
+
+		$character = CharacterType::find($character_id);
+
+		$describe .= $character->display_name;
+
+		$describe .= '人才';
+
+		return $describe;
 	}
 
 }
