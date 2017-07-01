@@ -14,11 +14,11 @@ class AddColumnsToResumesTable extends Migration
     public function up()
     {
 	    Schema::table('resumes', function (Blueprint $table) {
-		    $table->text('education');
-		    $table->text('practice');
-		    $table->text('honor');
-		    $table->text('work');
-		    $table->text('speciality');
+		    $table->text('education')->nullable();
+		    $table->text('practice')->nullable();
+		    $table->text('honor')->nullable();
+		    $table->text('work')->nullable();
+		    $table->text('speciality')->nullable();
 	    });
     }
 
