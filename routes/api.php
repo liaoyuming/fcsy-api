@@ -7,7 +7,9 @@ $api->version('v1', function ($api) {
 
         $api->get('user', 'UserController@index');
         $api->get('resume', 'ResumeController@index');
-
+	    $api->post('user/answer', 'UserController@answer');
+	    $api->post('user/update', 'UserController@update');
+		$api->get('information/{user}', 'UserController@information');
         // 设置简历是否可见
         $api->post('changeResumeStatus', 'ResumeController@changeResumeStatus');
         // 短信路由
