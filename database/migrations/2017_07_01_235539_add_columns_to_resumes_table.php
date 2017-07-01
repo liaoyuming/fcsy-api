@@ -13,7 +13,13 @@ class AddColumnsToResumesTable extends Migration
      */
     public function up()
     {
-        //
+	    Schema::table('resumes', function (Blueprint $table) {
+		    $table->text('education');
+		    $table->text('practice');
+		    $table->text('honor');
+		    $table->text('work');
+		    $table->text('speciality');
+	    });
     }
 
     /**
@@ -23,6 +29,12 @@ class AddColumnsToResumesTable extends Migration
      */
     public function down()
     {
-        //
+	    Schema::table('resumes', function (Blueprint $table) {
+		    $table->dropColumn('education');
+		    $table->dropColumn('practice');
+		    $table->dropColumn('honor');
+		    $table->dropColumn('work');
+		    $table->dropColumn('speciality');
+	    });
     }
 }
