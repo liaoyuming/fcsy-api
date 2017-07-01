@@ -4,12 +4,10 @@ namespace App\Http\Requests\Api;
 
 class QuestionnaireRequest extends ApiRequest
 {
-    protected function getRestrictions()
+    public function rules()
     {
         return [
-            'id' => [
-                'required' => true,
-            ],
+            'id' => 'required',
         ];
     }
 }
