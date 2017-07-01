@@ -14,7 +14,7 @@ class RegisterController extends ApiController
 {
     public function index(RegisterRequest $request)
     {
-        if (! (new SmsController())->verifySmsCode($request->get('telphone'), $request->get('code'))) {
+       if (! (new SmsController())->verifySmsCode($request->get('telphone'), $request->get('code'))) {
             return response()->json([
                 'result' => false,
                 'status_code' => 40001,  // todo define ErrorType 常量
@@ -70,6 +70,7 @@ class RegisterController extends ApiController
         return response()->json([
             'result' => $result,
             'msg'    => $result ? '用户已注册' : '用户未注册',
+            'wechat_user_info' => $wechat_user
         ], 200);
     }
 }
