@@ -7,16 +7,34 @@ use App\Models\WechatUser;
 use App\Http\Requests\Request;
 use App\Http\Requests\APi\RegisterCheckRequest;
 
-class RegisterController
+use Validator;
+
+class RegisterController extends ApiController
 {
     public function index(Request $request)
     {
+        $validate = Validator::make($request->all(), [
+            'openId'     => 'required',
+            'telphone'   => 'required',
+            'code'       => 'required',
+            'password'   => 'required | min:6',
+            'nickName'   => 'required',
+            'gender'     => 'required',
+            'avatarUrl'  => 'required',
+        ]);
+        if ($validate->fails()) {
+            return response()->json([
+                    'result' => $validate->errors(),
+                    'msg'    => 'forms validated errors'
+                ], 400);
+        }
+
 
         if (! (new SmsController())->verifySmsCode($request->get('telphone'), $request->get('code'))) {
             return response()->json([
                 'result' => false,
                 'msg'    => '短信验证码不正确'
-            ], 403);
+            ], 400);
         }
 
         $userData = $request->only([
@@ -56,7 +74,7 @@ class RegisterController
     public function check(RegisterCheckRequest $request)
     {
         $wechat_user = WechatUser::where('open_id', $request->input('open_id'))->first();
-        
+
         $result = $wechat_user ? !!$wechat_user->user : false;
 
         return response()->json([

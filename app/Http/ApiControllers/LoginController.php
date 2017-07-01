@@ -28,11 +28,28 @@ class LoginController
                 ]
             , 200);
         }
+
         return response()->json(
             [
                 'result' => false,
                 'msg'    => '登录失败'
             ]
+            , 408);
+    }
+
+    public function wechat(Request $request)
+    {
+        $code = $request->get('code');
+        if (empty($code)) {
+            return response()->json(
+                [
+                    'result' => false,
+                    'msg'    => '登录失败'
+                ]
             , 403);
+        }
+        $xcx = App::make("wxxcx");
+        $loginInfo = $xcx->getLoginInfo($code);
+        dd($loginInfo);
     }
 }

@@ -12,7 +12,6 @@ class User extends BaseModel
         'mobile',
         'password'
     ];
-    
     public function resumes()
     {
         return $this->hasMany('App\Models\Resume');
