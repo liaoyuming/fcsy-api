@@ -59,7 +59,15 @@ class WechatUserController extends Controller
 	 */
 	public function information($openId)
 	{
+
 		$user = WechatUser::where('open_id', $openId)->first();;
+
+		if (!$user) {
+			return response()->json([
+				'message' => 'not exist',
+			    'status_code' => 404,
+			]);
+		}
 
 		// 获取问答数据
 		$data = UserQuestion::where('open_id', $openId)->get()->toArray();
