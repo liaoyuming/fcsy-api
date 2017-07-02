@@ -25,7 +25,7 @@ class RegisterController extends ApiController
         $userData = [
             'username' => $request->get('nickName'),
             'member_expire_time' => date('Y-m-d h:i:s', strtotime('+1 week')),
-            'mobile'   => $request->get('telphone'),
+            'mobile'   => $request->get('mobile'),
             'password' => bcrypt($request->get('password'))
         ];
 
@@ -65,12 +65,20 @@ class RegisterController extends ApiController
     {
         $wechat_user = WechatUser::where('open_id', $request->input('open_id'))->first();
 
-        $result = $wechat_user ? !!$wechat_user->user : false;
+        if (!$wechat_user) {
+            return response()->json([
+                'result' => false,
+                'message' => '微信用户未注册',
+				'status_code' => 20001,
+            ], 402);
+        }
+
+        $result = !!$wechat_user->user;
 
         return response()->json([
             'result' => $result,
             'msg'    => $result ? '用户已注册' : '用户未注册',
-            'wechat_user_info' => $wechat_user
+            'user_id' => $wechat_user->user_id,
         ], 200);
     }
 }

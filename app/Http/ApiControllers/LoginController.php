@@ -17,7 +17,7 @@ class LoginController
     public function authenticate(Request $request)
     {
         $authData = [
-                'mobile'   => $request->get('telphone'),
+                'mobile'   => $request->get('mobile'),
                 'password' => $request->get('password')
         ];
         if (Auth::attempt($authData)) {
@@ -35,24 +35,5 @@ class LoginController
                 'msg'    => '登录失败'
             ]
             , 408);
-    }
-
-    public function wechat(Request $request)
-    {
-        $code = $request->get('code');
-        if (empty($code)) {
-            return response()->json([
-                    'result' => false,
-                    'msg'    => '微信登录失败',
-                ], 403);
-        }
-        $xcx = app()->make("wxxcx");
-        $loginInfo = $xcx->getLoginInfo($code);
-
-        return response()->json([
-            'result' => true,
-            'msg'    => '微信登录成功',
-            'data'   => $loginInfo,
-        ]);
     }
 }

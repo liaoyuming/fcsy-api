@@ -7,19 +7,18 @@ $api->version('v1', function ($api) {
 
         $api->get('user', 'UserController@index');
         $api->get('resume', 'ResumeController@index');
-	    $api->post('user/answer', 'WechatUserController@answer');
-	    $api->post('user/update', 'WechatUserController@update');
-		$api->get('information/{user}', 'WechatUserController@information');
+
         // 设置简历是否可见
         $api->post('changeResumeStatus', 'ResumeController@changeResumeStatus');
         // 短信路由
         $api->post('getSmsCode', 'SmsController@getSmsCode');
-        // 注册路由
-        $api->post('register', 'RegisterController@register');
+
         // 登录路由
         $api->post('login', 'LoginController@authenticate');
         // 微信登录路由
-        $api->post('wechat', 'LoginController@wechat');
+        $api->post('wechat/login_info', 'WechatController@loginInfo');
+
+
 
         $api->group(['prefix' => 'questionnaire'], function ($api) {
                 $api->get('/', 'QuestionnaireController@index');
@@ -29,6 +28,14 @@ $api->version('v1', function ($api) {
         $api->group(['prefix' => 'register'], function ($api) {
                 $api->post('/', 'RegisterController@index');
                 $api->post('/check', 'RegisterController@check');
+                $api->post('/wechat', 'RegisterController@wechat');
+        });
+
+        $api->group(['prefix' => 'wxuser'], function ($api) {
+                $api->post('/answer', 'WechatUserController@answer');
+                $api->post('/update', 'WechatUserController@update');
+                $api->post('/create', 'WechatUserController@create');
+                $api->post('information/{user}', 'WechatUserController@information');
         });
     });
 });

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
-class RegisterRequest extends ApiRequest
+class WxUserCreateRequest extends ApiRequest
 {
     public function rules()
     {

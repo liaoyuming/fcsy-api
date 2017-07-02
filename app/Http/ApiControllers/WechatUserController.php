@@ -13,9 +13,34 @@ use App\Models\Resume;
 use App\Models\User;
 use App\Models\UserQuestion;
 use App\Transformers\UserTransformer;
+use App\Http\Requests\Api\WxUserCreateRequest;
 
 class WechatUserController extends Controller
 {
+
+    public function create(WxUserCreateRequest $request)
+    {
+        $wechat_user = WechatUser::where('open_id', $request->input('open_id'))->first();
+
+        if (!$wechat_user) {
+            $result = WechatUser::create([
+                'open_id'   => $request->get('openId'),
+                'nickname'  => $request->get('nickName'),
+                'gender'    => $request->get('gender'),
+                'city'      => $request->get('city'),
+                'province'  => $request->get('province'),
+                'country'   => $request->get('country'),
+                'avatar_url' => $request->get('avatarUrl'),
+            ]);
+        }
+
+        return response()->json([
+            'result' => true,
+            'msg'    => 'success',
+        ], 200);
+
+    }
+
 	/**
 	 * @param Request $request
 	 */
@@ -54,6 +79,12 @@ class WechatUserController extends Controller
 		$result = json_decode($string, true);
 		$openId = $result['open_id'];
 		$user = WechatUser::where('open_id', $openId)->first();
+        if (!$user) {
+            return response()->json([
+				'message' => 'not exist',
+				'status_code' => 404,
+			], 404);
+        }
 		$data = $result['data'];
 		$this->syncData($user, $data);
 		return response()->json([
