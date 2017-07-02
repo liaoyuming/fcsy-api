@@ -15,7 +15,9 @@ class ModifyColumnOfResumesTable extends Migration
     {
 	    Schema::table('resumes', function (Blueprint $table) {
 		    $table->dropForeign('resumes_user_id_foreign');
-		    $table->renameColumn('user_id', 'open_id');
+            $table->dropColumn('user_id');
+            $table->string('open_id')->comment('微信open_id')->after('id');
+            $table->foreign('open_id')->references('open_id')->on('wechat_users');
 	    });
     }
 
@@ -28,8 +30,8 @@ class ModifyColumnOfResumesTable extends Migration
     {
         if (Schema::hasColumn('resumes', 'open_id')) {
 	        Schema::table('resumes', function (Blueprint $table) {
-    		    $table->renameColumn('open_id', 'user_id');
-    		    $table->foreign('user_id')->references('id')->on('users');
+                $table->dropColumn('open_id');
+                $table->integer('user_id')->unsigned();
     	    });
         }
     }
