@@ -15,8 +15,7 @@ class CreateWechatUsersTable extends Migration
     {
         Schema::create('wechat_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('user_id')->unsigned()->default(0)->comment('user表外键');
             $table->tinyInteger('gender')->comment('性别');
             $table->string('city')->comment('city');
             $table->string('province')->comment('province');
