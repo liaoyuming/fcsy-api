@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use App\Models\WechatUser;
 
 class ResumesTableSeeder extends Seeder
 {
@@ -12,15 +12,15 @@ class ResumesTableSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::first();
+        $wxUser = WechatUser::first();
 
         DB::table('resumes')->insert([
-            'user_id' => $user->id,
-            'name' => $user->username,
+            'open_id' => $wxUser->open_id,
+            'name' => $wxUser->nickname,
             'sex' => rand(0, 1),
             'position' => '程序员',
             'city' => '北京',
-            'mobile' => $user->mobile,
+            'mobile' => '135'.str_random(8),
             'email' => str_random(10) . '@gmail.com',
             'value' => rand(4100, 9600),
             'is_open' => 1,
