@@ -24,7 +24,7 @@ class WechatUserController extends Controller
 
         if (!$wechat_user) {
             $result = WechatUser::create([
-                'open_id'   => $request->get('openId'),
+                'open_id'   => $request->get('open_id'),
                 'nickname'  => $request->get('nickName'),
                 'gender'    => $request->get('gender'),
                 'city'      => $request->get('city'),
