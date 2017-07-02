@@ -21,6 +21,6 @@ class Question extends BaseModel
 	 */
 	public function users()
 	{
-		return $this->belongsToMany(User::class, 'user_question');
+		return $this->belongsToMany(WechatUser::class, 'user_question', 'open_id', 'open_id');
 	}
 }

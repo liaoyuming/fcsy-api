@@ -22,4 +22,21 @@ class WechatUser extends Model
         return $this->belongsTo('App\Models\User');
 
     }
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function resume()
+	{
+		return $this->hasOne(Resume::class, 'open_id', 'open_id');
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
+	public function questions()
+	{
+		return $this->belongsToMany(Question::class, 'user_question', 'open_id', 'question_id');
+	}
+
 }
