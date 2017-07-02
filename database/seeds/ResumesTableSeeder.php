@@ -17,7 +17,7 @@ class ResumesTableSeeder extends Seeder
         DB::table('resumes')->insert([
             'open_id' => $wxUser->open_id,
             'name' => $wxUser->nickname,
-            'sex' => rand(0, 1),
+            'gender' => rand(0, 1),
             'position' => '程序员',
             'city' => '北京',
             'mobile' => '135'.str_random(8),

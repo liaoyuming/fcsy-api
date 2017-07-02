@@ -26,9 +26,11 @@ class ModifyColumnFromUserIdToOpenId extends Migration
      */
     public function down()
     {
-	    Schema::table('user_question', function (Blueprint $table) {
-		    $table->renameColumn('open_id', 'user_id');
-		    $table->foreign('user_id')->references('id')->on('users');
-	    });
+        if (Schema::hasColumn('user_question', 'open_id')) {
+	        Schema::table('user_question', function (Blueprint $table) {
+                $table->renameColumn('open_id', 'user_id');
+                $table->foreign('user_id')->references('id')->on('users');
+	        });
+        }
     }
 }

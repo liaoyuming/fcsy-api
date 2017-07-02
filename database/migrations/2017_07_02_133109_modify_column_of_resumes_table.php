@@ -26,9 +26,11 @@ class ModifyColumnOfResumesTable extends Migration
      */
     public function down()
     {
-	    Schema::table('resumes', function (Blueprint $table) {
-		    $table->renameColumn('open_id', 'user_id');
-		    $table->foreign('user_id')->references('id')->on('users');
-	    });
+        if (Schema::hasColumn('resumes', 'open_id')) {
+	        Schema::table('resumes', function (Blueprint $table) {
+    		    $table->renameColumn('open_id', 'user_id');
+    		    $table->foreign('user_id')->references('id')->on('users');
+    	    });
+        }
     }
 }

@@ -17,14 +17,14 @@ class CreateResumesTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('name');
-            $table->tinyInteger('sex');
-            $table->string('position');
-            $table->string('city');
-            $table->string('mobile');
-            $table->string('email');
-            $table->string('value');
-            $table->tinyInteger('is_open');
+            $table->string('name')->default('');
+            $table->tinyInteger('gender');
+            $table->string('position')->default('');
+            $table->string('city')->default('');
+            $table->string('mobile')->default('');
+            $table->string('email')->default('');
+            $table->string('value')->default('');
+            $table->tinyInteger('is_open')->default(0);
             $table->timestamps();
         });
     }
