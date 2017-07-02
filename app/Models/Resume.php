@@ -6,6 +6,18 @@ use App\Models\BaseModel;
 
 class Resume extends BaseModel
 {
+    protected $fillable = [
+        'open_id',
+        'gender',
+        'name',
+        'position',
+        'city',
+        'mobile',
+        'email',
+        'is_open',
+        'value',
+    ];
+
 	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	 */
@@ -93,5 +105,5 @@ class Resume extends BaseModel
 	{
 		return unserialize($speciality);
 	}
-	
+
 }

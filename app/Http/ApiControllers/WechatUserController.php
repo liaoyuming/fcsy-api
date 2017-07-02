@@ -100,9 +100,9 @@ class WechatUserController extends Controller
 	public function information($openId)
 	{
 
-		$user = WechatUser::where('open_id', $openId)->first();;
+		$wxUser = WechatUser::where('open_id', $openId)->first();;
 
-		if (! $user) {
+		if (! $wxUser) {
 			return response()->json([
 				'message' => 'not exist',
 				'status_code' => 404,
@@ -112,29 +112,43 @@ class WechatUserController extends Controller
 		// 获取问答数据
 		$data = UserQuestion::where('open_id', $openId)->get()->toArray();
 
-		// 统计问答数据
-		$statistics = $this->getStatistics($data);
+        if ($data) {
+            // 统计问答数据
+            $statistics = $this->getStatistics($data);
 
-		$salary = 0;
+            // 根据问答计算基础薪资
+            $baseSalary = $this->getBaseSalary($statistics);
 
-		// 根据问答计算基础薪资
-		$baseSalary = $this->getBaseSalary($statistics);
+            // 获取描述
+            $description = $this->getDescription($statistics);
+        } else {
+            $baseSalary = 0;
+            $description = "你是什么类型的人才呢？";
 
-		$salary += $baseSalary;
+        }
+
+		$salary = $baseSalary;
+
+        if (!$wxUser->resume) {
+            Resume::create([
+                'open_id' => $openId,
+                'gender' => $wxUser->gender,
+                'name' => $wxUser->nickname,
+                'city' => $wxUser->city,
+                'is_open' => 0,
+                'value' => 0,
+            ]);
+        }
 
 		// 根据简历增加薪资
-		$extraSalaryMap = $this->getExtraSalary($user);
+		$extraSalaryMap = $this->getExtraSalary($wxUser);
 
 		foreach ($extraSalaryMap as $item) {
 			$salary += $item;
 		}
 
-
 		// 更新薪资
-		$resume = $this->updateResume($user, $salary);
-
-		// 获取描述
-		$description = $this->getDescription($statistics);
+		$resume = $this->updateResume($wxUser, $salary);
 
 		// 返回描述数据
 		return response()->json(array_merge($resume->toArray(), [

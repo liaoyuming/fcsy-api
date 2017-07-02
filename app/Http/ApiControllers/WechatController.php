@@ -6,7 +6,7 @@ use App\Http\Requests\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-class WechatController
+class WechatController extends ApiController
 {
     public function loginInfo(Request $request)
     {
