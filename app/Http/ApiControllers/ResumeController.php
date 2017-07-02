@@ -24,7 +24,7 @@ class ResumeController extends ApiController
      */
     public function changeResumeStatus(Request $request)
     {
-        $result = Resume::where('user_id', $request->get('id'))->update(['is_open' => $request->get('status')]);
+        $result = Resume::where('open_id', $request->get('open_id'))->update(['is_open' => $request->get('status')]);
         return response()->json([
                 'result' => $result,
                 'msg'    => '更新简历状态成功'
