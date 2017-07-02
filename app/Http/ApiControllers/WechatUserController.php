@@ -32,7 +32,15 @@ class WechatUserController extends Controller
 		$resume->{$key} = $data;
 		$result = $resume->save();
 		if ($result) {
-			return response()->json($result);
+			return response()->json([
+				'message' => 'success',
+				'status_code' => 200,
+			], 200);
+		} else {
+			return response()->json([
+				'message' => 'failed',
+				'status_code' => 500
+			], 500);
 		}
 	}
 
@@ -50,7 +58,8 @@ class WechatUserController extends Controller
 		$this->syncData($user, $data);
 		return response()->json([
 			'result' => true,
-			'msg' => 'success'
+			'message' => 'success',
+			'status_code' => 200,
 		], 200);
 	}
 
@@ -62,11 +71,11 @@ class WechatUserController extends Controller
 
 		$user = WechatUser::where('open_id', $openId)->first();;
 
-		if (!$user) {
+		if (! $user) {
 			return response()->json([
 				'message' => 'not exist',
-			    'status_code' => 404,
-			]);
+				'status_code' => 404,
+			], 404);
 		}
 
 		// 获取问答数据
