@@ -86,7 +86,7 @@ class WechatUserController extends Controller
 			], 404);
         }
 		$data = $result['data'];
-		$this->syncData($user, $data);
+		$this->syncData($user, $data, $openId);
 		return response()->json([
 			'result' => true,
 			'message' => 'success',
@@ -175,15 +175,19 @@ class WechatUserController extends Controller
 	 *
 	 * @param $data
 	 */
-	protected function syncData($user, $data)
+	protected function syncData($wxUser, $data, $openId)
 	{
-		$syncData = [];
+        $questionIds = collect($data)->pluck('question_id');
 
-		foreach ($data as $item) {
-			$syncData[$item['question_id']] = ['question_option_id' => $item['question_option_id']];
+        $res = UserQuestion::where('open_id', $openId)
+            ->whereIn('question_id', $questionIds)
+            ->delete();
+
+		foreach ($data as $key => $item) {
+            $data[$key]['open_id'] = $openId;
 		}
 
-		return $user->questions()->sync($syncData);
+        return UserQuestion::insert($data);
 	}
 
 	/**
