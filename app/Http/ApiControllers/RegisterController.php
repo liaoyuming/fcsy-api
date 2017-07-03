@@ -14,36 +14,32 @@ class RegisterController extends ApiController
 {
     public function index(RegisterRequest $request)
     {
-       if (! (new SmsController())->verifySmsCode($request->get('mobile'), $request->get('code'))) {
-            return response()->json([
-                'result' => false,
-                'status_code' => 40001,  // todo define ErrorType 常量
-                'msg'    => '短信验证码不正确'
-            ], 400);
-        }
+    //    if (! (new SmsController())->verifySmsCode($request->get('mobile'), $request->get('code'))) {
+    //         return response()->json([
+    //             'result' => false,
+    //             'status_code' => 40001,  // todo define ErrorType 常量
+    //             'msg'    => '短信验证码不正确'
+    //         ], 400);
+    //     }
 
-        $userData = [
-            'username' => $request->get('username', $request->get('nickName')),
-            'mobile'   => $request->get('mobile'),
-            'password' => bcrypt($request->get('password'))
-        ];
-
-        $user = User::create($userData);
-
-        if ($user->id > 0) {
-            $wechatData = [
-                'user_id' => $user->id,
-                'open_id'  => $request->get('openId'),
-                'nickname'  => $request->get('nickName'),
-                'gender'  => $request->get('gender'),
-                'city'  => $request->get('city'),
-                'province'  => $request->get('province'),
-                'country'  => $request->get('country'),
-                'avatar_url'  => $request->get('avatarUrl'),
-            ];
-        }
-
-        $result = WechatUser::create($wechatData);
+        $data = $request->all();
+        $user = User::updateOrCreate([
+                'mobile'   => $data['mobile']
+            ],[
+                'username' => array_get($data, 'username', $data['nickName']),
+                'password' => bcrypt($data['password'])
+            ]);
+        $result = WechatUser::updateOrCreate([
+                'open_id' => $data['openId']
+            ], [
+                'user_id'   => $user->id,
+                'nickname'  => $data['nickName'],
+                'gender'    => $data['gender'],
+                'city'      => $data['city'],
+                'province'  => $data['province'],
+                'country'   => $data['country'],
+                'avatar_url' => $data['avatarUrl'],
+            ]);
 
         if ($result->id > 0) {
             return response()->json([
