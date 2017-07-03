@@ -10,7 +10,6 @@ class UserTransformer extends BaseTransformer
             'username' => $model->username,
             'mobile' => $model->mobile,
             'is_member' => $model->is_member,
-            'member_expire_time' => $model->member_expire_time,
             'resumes' => $model->resumes,
         ];
     }

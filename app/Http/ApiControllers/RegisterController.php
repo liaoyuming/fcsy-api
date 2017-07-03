@@ -23,8 +23,7 @@ class RegisterController extends ApiController
         }
 
         $userData = [
-            'username' => $request->get('nickName'),
-            'member_expire_time' => date('Y-m-d h:i:s', strtotime('+1 week')),
+            'username' => $request->get('username', $request->get('nickName')),
             'mobile'   => $request->get('mobile'),
             'password' => bcrypt($request->get('password'))
         ];

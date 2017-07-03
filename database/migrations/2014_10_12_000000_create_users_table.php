@@ -19,7 +19,6 @@ class CreateUsersTable extends Migration
             $table->string('mobile');
             $table->string('password');
             $table->tinyInteger('is_member')->default(0);
-            $table->dateTime('member_expire_time');
             $table->rememberToken();
             $table->timestamps();
         });

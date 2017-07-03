@@ -16,7 +16,6 @@ class UsersTableSeeder extends Seeder
            'mobile' => '135'. rand(10000000, 99999999),
            'password' => bcrypt('secret'),
            'is_member' => 1,
-           'member_expire_time' => date('Y-m-d h:i:s', strtotime('+1 year')),
            'created_at' => date('Y-m-d h:i:s', time()),
            'updated_at' => date('Y-m-d h:i:s', time()),
        ]);

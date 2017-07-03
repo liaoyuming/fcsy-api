@@ -12,8 +12,7 @@ class User extends BaseModel
 		'username',
 		'mobile',
 		'password',
-		'member_expire_time'
 	];
-	
-	
+
+
 }
