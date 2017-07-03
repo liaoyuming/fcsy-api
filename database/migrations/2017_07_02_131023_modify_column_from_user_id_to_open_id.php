@@ -28,7 +28,7 @@ class ModifyColumnFromUserIdToOpenId extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('user_question', 'open_id')) {
+        if (Schema::hasColumn('user_question', 'open_id') && !Schema::hasColumn('user_question', 'open_id')) {
 	        Schema::table('user_question', function (Blueprint $table) {
                 $table->dropColumn('open_id');
                 $table->integer('user_id')->unsigned();

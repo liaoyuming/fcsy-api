@@ -28,7 +28,8 @@ class ModifyColumnOfResumesTable extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('resumes', 'open_id')) {
+        Schema::disableForeignKeyConstraints();
+        if (Schema::hasColumn('resumes', 'open_id') && !Schema::hasColumn('resumes', 'user_id')) {
 	        Schema::table('resumes', function (Blueprint $table) {
                 $table->dropColumn('open_id');
                 $table->integer('user_id')->unsigned();
