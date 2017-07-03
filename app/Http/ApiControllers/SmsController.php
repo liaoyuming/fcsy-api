@@ -18,31 +18,31 @@ class SmsController extends ApiController
      */
     public function getSmsCode(Request $request)
     {
-        $telphone = $request->get('telphone');
-        if (empty($telphone)) {
+        $mobile = $request->get('mobile');
+        if (empty($mobile)) {
             return $this->response()->json([
                 'status' => false,
                 'msg'    => '电话不能为空'
             ], 401);
         }
-        return response()->json($this->sendSms($telphone), 200);
+        return response()->json($this->sendSms($mobile), 200);
     }
 
     /**
      * 发送短信
      *
-     * @param int $telphone
+     * @param int $mobile
      *
      * @return array $result
      */
-     private function sendSms($telphone)
+     private function sendSms($mobile)
      {
          $config = Config::get('sms.yunpian');
          $easySms = new EasySms($config);
-         $code = $this->generateSmsCode($telphone);
+         $code = $this->generateSmsCode($mobile);
 
          $result = $easySms->send(
-             $telphone,
+             $mobile,
              [
                  'content'  => '您的验证码是' . $code,
                  'template' => 'SMS_001',
@@ -58,57 +58,57 @@ class SmsController extends ApiController
     /**
      * 生成code
      *
-     * @param int $telphone
+     * @param int $mobile
      *
      * @return int $code;
      */
-     private function generateSmsCode($telphone)
+     private function generateSmsCode($mobile)
      {
         $code = random_int(100000, 999999);
-        $this->setCodeCache($telphone, $code);
+        $this->setCodeCache($mobile, $code);
         return $code;
      }
 
     /**
      * 设置code缓存
      *
-     * @param int $telphone
+     * @param int $mobile
      * @param int $code
      *
      */
-    private function setCodeCache($telphone, $code)
+    private function setCodeCache($mobile, $code)
     {
         $expiresAt = Carbon::now()->addMinutes(10);
-        Cache::put($telphone, $code, $expiresAt);
+        Cache::put($mobile, $code, $expiresAt);
     }
 
     /**
      *  移除code缓存
      *
-     * @param int $telphone
+     * @param int $mobile
      * @param int $code
      *
      * @return bool;
      */
-    private function removeCodeCache($telphone)
+    private function removeCodeCache($mobile)
     {
-        return Cache::forget($telphone);
+        return Cache::forget($mobile);
     }
 
     /**
      *  验证code
      *
-     * @param int $telphone
+     * @param int $mobile
      * @param int $code
      *
      * @return bool
      */
-    public function verifySmsCode($telphone, $code)
+    public function verifySmsCode($mobile, $code)
     {
-        $value = Cache::get($telphone);
+        $value = Cache::get($mobile);
         if ($value == $code) {
            // 移除code缓存
-           $this->removeCodeCache($telphone);
+           $this->removeCodeCache($mobile);
            return true;
         }
        return false;
