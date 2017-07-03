@@ -14,7 +14,7 @@ class RegisterController extends ApiController
 {
     public function index(RegisterRequest $request)
     {
-       if (! (new SmsController())->verifySmsCode($request->get('telphone'), $request->get('code'))) {
+       if (! (new SmsController())->verifySmsCode($request->get('mobile'), $request->get('code'))) {
             return response()->json([
                 'result' => false,
                 'status_code' => 40001,  // todo define ErrorType 常量
