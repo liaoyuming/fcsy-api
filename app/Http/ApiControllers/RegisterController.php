@@ -14,13 +14,13 @@ class RegisterController extends ApiController
 {
     public function index(RegisterRequest $request)
     {
-    //    if (! (new SmsController())->verifySmsCode($request->get('mobile'), $request->get('code'))) {
-    //         return response()->json([
-    //             'result' => false,
-    //             'status_code' => 40001,  // todo define ErrorType 常量
-    //             'msg'    => '短信验证码不正确'
-    //         ], 400);
-    //     }
+       if (! (new SmsController())->verifySmsCode($request->get('mobile'), $request->get('code'))) {
+            return response()->json([
+                'result' => false,
+                'status_code' => 40001,  // todo define ErrorType 常量
+                'msg'    => '短信验证码不正确'
+            ], 400);
+        }
 
         $data = $request->all();
         $user = User::updateOrCreate([
