@@ -320,16 +320,16 @@ class WechatUserController extends Controller
 		$honorSalary = 0;
 		$honor = $resume->honor;
 		if ($honor) {
-			foreach ($honor as $item) {
-				switch ($item['type']) {
-					case '校级':
-						$honorSalary += 100;
+			foreach ($honor as $kind => $item) {
+                switch ($kind) {
+					case 'schoolLevel':
+                        $honorSalary += 100;
 						break;
-					case '省级':
-						$honorSalary += 200;
+					case 'cityLevel':
+                        $honorSalary += 200;
 						break;
-					case '国家级':
-						$honorSalary += 500;
+					case 'countryLevel':
+                        $honorSalary += 500;
 						break;
 				}
 			}
