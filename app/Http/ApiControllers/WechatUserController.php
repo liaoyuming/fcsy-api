@@ -124,31 +124,29 @@ class WechatUserController extends Controller
         } else {
             $baseSalary = 0;
             $description = "你是什么类型的人才呢？";
-
         }
 
 		$salary = $baseSalary;
 
-        if (!$wxUser->resume) {
-            Resume::create([
-                'open_id' => $openId,
-                'gender' => $wxUser->gender,
-                'name' => $wxUser->nickname,
-                'city' => $wxUser->city,
-                'is_open' => 0,
-                'value' => 0,
-            ]);
-        }
+        $resume = Resume::firstOrCreate([
+            'open_id' => $openId
+        ], [
+            'name'     => $wxUser->nickname,
+            'gender'   => $wxUser->gender,
+            'city'     => $wxUser->city,
+            'province' => $wxUser->province,
+            'country'  => $wxUser->country,
+        ]);
 
 		// 根据简历增加薪资
-		$extraSalaryMap = $this->getExtraSalary($wxUser);
+		$extraSalaryMap = $this->getExtraSalary($wxUser, $resume);
 
 		foreach ($extraSalaryMap as $item) {
 			$salary += $item;
 		}
 
 		// 更新薪资
-		$resume = $this->updateResume($wxUser, $salary);
+		$resume = $this->updateResume($resume, $salary);
 
 		// 返回描述数据
 		return response()->json(array_merge($resume->toArray(), [
@@ -194,9 +192,8 @@ class WechatUserController extends Controller
 	 * @param $user
 	 * @param $salary
 	 */
-	protected function updateResume($user, $salary)
+	protected function updateResume($resume, $salary)
 	{
-		$resume = $user->resume;
 		$resume->value = intval($salary);
 		$resume->save();
 		return $resume;
@@ -272,10 +269,10 @@ class WechatUserController extends Controller
 	/**
 	 * @param $user
 	 */
-	protected function getExtraSalary($user)
+	protected function getExtraSalary($wxUser, $resume)
 	{
 		$salaryMap = [];
-		$resume = $user->resume;
+
 		$education = $resume->education;
 		// 获取教育背景
 		$educationSalary = 0;
@@ -370,11 +367,11 @@ class WechatUserController extends Controller
 
 		// 会员信息
 		$salaryMember = 0;
-		if ($user->username) {
+		if ($wxUser->username) {
 			$salaryMember += 200;
 		}
 
-		if ($user->mobile) {
+		if ($wxUser->mobile) {
 			$salaryMember += 300;
 		}
 		$salaryMap['member'] = $salaryMember;
