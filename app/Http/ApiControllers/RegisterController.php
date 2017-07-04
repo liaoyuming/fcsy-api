@@ -3,6 +3,7 @@
 namespace App\Http\ApiControllers;
 
 use App\Models\User;
+use App\Models\Resume;
 use App\Models\WechatUser;
 use App\Http\Requests\Request;
 use App\Http\Requests\Api\RegisterCheckRequest;
@@ -23,12 +24,25 @@ class RegisterController extends ApiController
         }
 
         $data = $request->all();
+        $username = array_get($data, 'username', $data['nickName']);
         $user = User::updateOrCreate([
                 'mobile'   => $data['mobile']
             ],[
-                'username' => array_get($data, 'username', $data['nickName']),
+                'username' => $username,
                 'password' => bcrypt($data['password'])
             ]);
+
+        Resume::updateOrCreate([
+            'open_id' => $data['openId']
+        ], [
+            'name'     => $username,
+            'gender'   => $data['gender'],
+            'city'     => $data['city'],
+            'province' => $data['province'],
+            'country'  => $data['country'],
+            'mobile'   => $data['mobile'],
+        ]);
+
         $result = WechatUser::updateOrCreate([
                 'open_id' => $data['openId']
             ], [
