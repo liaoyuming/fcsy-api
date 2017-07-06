@@ -8,6 +8,8 @@ $api->version('v1', function ($api) {
         $api->get('user', 'UserController@index');
         $api->get('resume', 'ResumeController@index');
 
+        $api->get('character/show', 'CharacterTypeController@show');
+
         // 设置简历是否可见
         $api->post('changeResumeStatus', 'ResumeController@changeResumeStatus');
         // 短信路由
@@ -17,7 +19,6 @@ $api->version('v1', function ($api) {
         $api->post('login', 'LoginController@authenticate');
         // 微信登录路由
         $api->post('wechat/login_info', 'WechatController@loginInfo');
-
 
 
         $api->group(['prefix' => 'questionnaire'], function ($api) {

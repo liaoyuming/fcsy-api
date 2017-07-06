@@ -116,6 +116,8 @@ class WechatUserController extends Controller
             // 统计问答数据
             $statistics = $this->getStatistics($data);
 
+            $maxCharacteTypeId = array_keys($this->max($statistics, 1))[0] + 1;
+
             // 根据问答计算基础薪资
             $baseSalary = $this->getBaseSalary($statistics);
 
@@ -128,7 +130,7 @@ class WechatUserController extends Controller
 
 		$salary = $baseSalary;
 
-        $resume = Resume::firstOrCreate([
+        $resume = Resume::updateOrCreate([
             'open_id' => $openId
         ], [
             'name'     => $wxUser->nickname,
@@ -136,6 +138,7 @@ class WechatUserController extends Controller
             'city'     => $wxUser->city,
             'province' => $wxUser->province,
             'country'  => $wxUser->country,
+            'character_type_id' => isset($maxCharacteTypeId) ? $maxCharacteTypeId : 0,
         ]);
 
 		// 根据简历增加薪资
@@ -218,7 +221,6 @@ class WechatUserController extends Controller
 		$description .= '人才';
 		return $description;
 	}
-
 
 	/**
 	 * @param $data

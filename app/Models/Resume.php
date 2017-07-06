@@ -16,6 +16,7 @@ class Resume extends BaseModel
         'email',
         'is_open',
         'value',
+        'character_type_id',
     ];
 
 	/**
