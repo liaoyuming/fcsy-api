@@ -17,6 +17,11 @@ class CreateCharacterTypesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('display_name');
+            $table->string('personality')->nullable()->comment('个性特征');
+            $table->text('emotion')->nullable()->comment('情绪特征');
+            $table->text('advantage')->nullable()->comment('优点');
+            $table->text('proposal')->nullable()->comment('发展建议');
+            $table->text('task')->nullable()->comment('本周任务');
         });
     }
 
