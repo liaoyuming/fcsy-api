@@ -18,28 +18,28 @@ use App\Http\Requests\Api\WxUserCreateRequest;
 class WechatUserController extends Controller
 {
 
-    public function create(WxUserCreateRequest $request)
-    {
-        $wechat_user = WechatUser::where('open_id', $request->input('open_id'))->first();
+	public function create(WxUserCreateRequest $request)
+	{
+		$wechat_user = WechatUser::where('open_id', $request->input('open_id'))->first();
 
-        if (!$wechat_user) {
-            $result = WechatUser::create([
-                'open_id'   => $request->get('open_id'),
-                'nickname'  => $request->get('nickName'),
-                'gender'    => $request->get('gender'),
-                'city'      => $request->get('city'),
-                'province'  => $request->get('province'),
-                'country'   => $request->get('country'),
-                'avatar_url' => $request->get('avatarUrl'),
-            ]);
-        }
+		if (! $wechat_user) {
+			$result = WechatUser::create([
+				'open_id' => $request->get('open_id'),
+				'nickname' => $request->get('nickName'),
+				'gender' => $request->get('gender'),
+				'city' => $request->get('city'),
+				'province' => $request->get('province'),
+				'country' => $request->get('country'),
+				'avatar_url' => $request->get('avatarUrl'),
+			]);
+		}
 
-        return response()->json([
-            'result' => true,
-            'msg'    => 'success',
-        ], 200);
+		return response()->json([
+			'result' => true,
+			'msg' => 'success',
+		], 200);
 
-    }
+	}
 
 	/**
 	 * @param Request $request
@@ -73,20 +73,14 @@ class WechatUserController extends Controller
 	 * @param Request $request
 	 * @return mixed
 	 */
-	public function answer(Request $request)
+	public function result(Request $request)
 	{
 		$string = strval($request->getContent());
 		$result = json_decode($string, true);
 		$openId = $result['open_id'];
 		$user = WechatUser::where('open_id', $openId)->first();
-        if (!$user) {
-            return response()->json([
-				'message' => 'not exist',
-				'status_code' => 404,
-			], 404);
-        }
 		$data = $result['data'];
-		$this->syncData($user, $data, $openId);
+		$this->syncData($user, $data);
 		return response()->json([
 			'result' => true,
 			'message' => 'success',
@@ -99,9 +93,7 @@ class WechatUserController extends Controller
 	 */
 	public function information($openId)
 	{
-
 		$wxUser = WechatUser::where('open_id', $openId)->first();;
-
 		if (! $wxUser) {
 			return response()->json([
 				'message' => 'not exist',
@@ -112,35 +104,26 @@ class WechatUserController extends Controller
 		// 获取问答数据
 		$data = UserQuestion::where('open_id', $openId)->get()->toArray();
 
-        if ($data) {
-            // 统计问答数据
-            $statistics = $this->getStatistics($data);
+		if ($data) {
+			// 统计问答数据
+			$statistics = $this->getStatistics($data);
 
-            $maxCharacteTypeId = array_keys($this->max($statistics, 1))[0] + 1;
+			// 根据问答计算基础薪资
+			$baseSalary = $this->getBaseSalary($statistics);
 
-            // 根据问答计算基础薪资
-            $baseSalary = $this->getBaseSalary($statistics);
-
-            // 获取描述
-            $description = $this->getDescription($statistics);
-        } else {
-            $baseSalary = 0;
-            $description = "你是什么类型的人才呢？";
-        }
+			// 获取描述
+			$description = $this->getDescription($statistics);
+		} else {
+			$baseSalary = 0;
+			$description = "你是什么类型的人才呢？";
+		}
 
 		$salary = $baseSalary;
 
-        $resume = Resume::updateOrCreate([
-            'open_id' => $openId
-        ], [
-            'name'     => $wxUser->nickname,
-            'gender'   => $wxUser->gender,
-            'city'     => $wxUser->city,
-            'province' => $wxUser->province,
-            'country'  => $wxUser->country,
-            'character_type_id' => isset($maxCharacteTypeId) ? $maxCharacteTypeId : 0,
-        ]);
-
+		$resume = $wxUser->resume;
+		if (!$resume) {
+			$resume = $wxUser->resume()->create();
+		}
 		// 根据简历增加薪资
 		$extraSalaryMap = $this->getExtraSalary($wxUser, $resume);
 
@@ -148,7 +131,17 @@ class WechatUserController extends Controller
 			$salary += $item;
 		}
 
-		// 更新薪资
+		$resume = Resume::updateOrCreate([
+			'open_id' => $openId
+		], [
+			'name'     => $wxUser->nickname,
+			'gender'   => $wxUser->gender,
+			'city'     => $wxUser->city,
+			'province' => $wxUser->province,
+			'country'  => $wxUser->country,
+			'character_type_id' => isset($maxCharacteTypeId) ? $maxCharacteTypeId : 0,
+		]);
+
 		$resume = $this->updateResume($resume, $salary);
 
 		// 返回描述数据
@@ -157,7 +150,6 @@ class WechatUserController extends Controller
 			'base_salary' => intval($baseSalary),
 			'extra_salary' => $extraSalaryMap
 		]));
-
 	}
 
 	/**
@@ -176,19 +168,16 @@ class WechatUserController extends Controller
 	 *
 	 * @param $data
 	 */
-	protected function syncData($wxUser, $data, $openId)
+	protected function syncData($user, $data)
 	{
-        $questionIds = collect($data)->pluck('question_id');
 
-        $res = UserQuestion::where('open_id', $openId)
-            ->whereIn('question_id', $questionIds)
-            ->delete();
+		UserQuestion::where('open_id', $user->open_id)->delete();
 
 		foreach ($data as $key => $item) {
-            $data[$key]['open_id'] = $openId;
+			$data[$key]['open_id'] = $user->open_id;
 		}
 
-        return UserQuestion::insert($data);
+		return UserQuestion::insert($data);
 	}
 
 	/**
@@ -233,15 +222,10 @@ class WechatUserController extends Controller
 		for ($i = 0; $i < 9; $i ++)
 			$result[$i] = 0;
 
-
 		// 遍历回答
 		foreach ($data as $item) {
-			$questionOptions = QuestionOption::where('question_id', $item['question_id'])->get();
-			if ($item['question_option_id'] == 1) {
-				$result[intval($questionOptions[0]->character_type_id) - 1] += 1;
-			} elseif ($item['question_option_id'] == 2) {
-				$result[intval($questionOptions[1]->character_type_id) - 1] += 1;
-			}
+			$option = QuestionOption::where('id', $item['question_option_id'])->first();
+			$result[intval($option->character_type_id) - 1] += 1;
 		}
 		return $result;
 	}
@@ -280,19 +264,19 @@ class WechatUserController extends Controller
 		$educationSalary = 0;
 		$educationSalaryExtra = false;
 		if ($education) {
-			foreach ($education as $kind => $item) {
-				switch ($kind) {
-					case 'bachelor':
+			foreach ($education as $item) {
+				switch ($item['type']) {
+					case '本科院校':
 						$educationSalary += 1000;
 						break;
-					case 'master':
+					case '硕士院校':
 						$educationSalary += 500;
 						break;
-					case 'doctor':
+					case '博士院校':
 						$educationSalary += 5000;
 						break;
 				}
-				if (! $educationSalaryExtra && in_array($item, ['清华大学', '北京大学', '中国人民大学', '复旦大学', '上海交通大学'])) {
+				if (! $educationSalaryExtra && in_array($item['content'], ['清华大学', '北京大学', '中国人民大学', '复旦大学', '上海交通大学'])) {
 					$educationSalary += 1000;
 					$educationSalaryExtra = true;
 				}
@@ -319,16 +303,16 @@ class WechatUserController extends Controller
 		$honorSalary = 0;
 		$honor = $resume->honor;
 		if ($honor) {
-			foreach ($honor as $kind => $item) {
-                switch ($kind) {
-					case 'schoolLevel':
-                        $honorSalary += 100;
+			foreach ($honor as $item) {
+				switch ($item['type']) {
+					case '校级奖励':
+						$honorSalary += 100;
 						break;
-					case 'cityLevel':
-                        $honorSalary += 200;
+					case '省级奖励':
+						$honorSalary += 200;
 						break;
-					case 'countryLevel':
-                        $honorSalary += 500;
+					case '国级奖励':
+						$honorSalary += 500;
 						break;
 				}
 			}

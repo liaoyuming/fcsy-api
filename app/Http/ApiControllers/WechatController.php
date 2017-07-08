@@ -17,6 +17,8 @@ class WechatController extends ApiController
                     'msg'    => '微信登录失败',
                 ], 403);
         }
+
+
         $xcx = app()->make("wxxcx");
         $loginInfo = $xcx->getLoginInfo($code);
 
